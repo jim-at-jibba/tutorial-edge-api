@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/jim-at-jibba/comments-api/internal/db"
@@ -18,9 +17,8 @@ func Run() error {
 		return err
 	}
 
-	// This is redundent as the Connect methond pings but
-	// for now it means db is used
-	if err := db.Ping(context.Background()); err != nil {
+	if err := db.MigrateDB(); err != nil {
+		fmt.Println("failed to migrate database")
 		return err
 	}
 
