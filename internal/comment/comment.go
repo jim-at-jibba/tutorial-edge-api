@@ -68,6 +68,8 @@ func (s *Service) DeleteComment(ctx context.Context, id string) error {
 	return ErrNotImplemented
 }
 
+// context.Content - allows us to pass important information through our services
+// request and trace ids -  corrolation ids
 func (s *Service) CreateComment(ctx context.Context, cmt Comment) (Comment, error) {
 	return Comment{}, ErrNotImplemented
 }
