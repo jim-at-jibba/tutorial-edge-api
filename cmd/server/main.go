@@ -23,6 +23,11 @@ func Run() error {
 	}
 
 	fmt.Println("successfully conected and pinged database")
+	// cmtService := comment.NewService(db)
+	// fmt.Println(cmtService.GetComment(
+	// 	context.Background(),
+	// 	"2800e3a2-c904-4180-abe9-d75d55fdff4b",
+	// ))
 	return nil
 }
 func main() {
