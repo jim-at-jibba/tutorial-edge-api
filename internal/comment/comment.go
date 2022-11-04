@@ -30,6 +30,7 @@ type Comment struct {
 // we need the fillowing methods to work
 type Store interface {
 	GetComment(context.Context, string) (Comment, error)
+	PostComment(context.Context, Comment) (Comment, error)
 }
 
 // Service - is the struct that all our
@@ -70,6 +71,10 @@ func (s *Service) DeleteComment(ctx context.Context, id string) error {
 
 // context.Content - allows us to pass important information through our services
 // request and trace ids -  corrolation ids
-func (s *Service) CreateComment(ctx context.Context, cmt Comment) (Comment, error) {
-	return Comment{}, ErrNotImplemented
+func (s *Service) PostComment(ctx context.Context, cmt Comment) (Comment, error) {
+	insertedCmt, err := s.Store.PostComment(ctx, cmt)
+	if err != nil {
+		return Comment{}, err
+	}
+	return insertedCmt, nil
 }

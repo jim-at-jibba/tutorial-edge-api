@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/jim-at-jibba/comments-api/internal/comment"
+	"github.com/satori/uuid"
 )
 
 type CommentRow struct {
@@ -42,4 +43,33 @@ func (d *Datebase) GetComment(
 	}
 
 	return convertCommentToCommentRow(cmtRow), nil
+}
+
+func (d *Datebase) PostComment(ctx context.Context, cmt comment.Comment) (comment.Comment, error) {
+	cmt.ID = uuid.NewV4().String()
+	postRow := CommentRow{
+		ID:     cmt.ID,
+		Slug:   sql.NullString{String: cmt.Slug, Valid: true},
+		Author: sql.NullString{String: cmt.Author, Valid: true},
+		Body:   sql.NullString{String: cmt.Body, Valid: true},
+	}
+
+	rows, err := d.Client.NamedQueryContext(
+		ctx,
+		`INSERT INTO comments
+    (id, slug, author, body)
+    VALUES
+    (:id, :slug, :author, :body)`,
+		postRow,
+	)
+
+	if err != nil {
+		return comment.Comment{}, fmt.Errorf("failed to insert comment: %w", err)
+	}
+
+	if err := rows.Close(); err != nil {
+		return comment.Comment{}, fmt.Errorf("failed to close the rows: %w", err)
+	}
+
+	return cmt, nil
 }
