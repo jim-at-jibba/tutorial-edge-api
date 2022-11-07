@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
+	"github.com/jim-at-jibba/comments-api/internal/comment"
 	"github.com/jim-at-jibba/comments-api/internal/db"
 )
 
@@ -23,7 +25,16 @@ func Run() error {
 	}
 
 	fmt.Println("successfully conected and pinged database")
-	// cmtService := comment.NewService(db)
+	cmtService := comment.NewService(db)
+	cmtService.PostComment(
+		context.Background(),
+		comment.Comment{
+			ID:     "2800e3a2-c904-4180-abe9-d75d55fdff4s",
+			Slug:   "manual-test",
+			Author: "Jim",
+			Body:   "Hello World",
+		},
+	)
 	// fmt.Println(cmtService.GetComment(
 	// 	context.Background(),
 	// 	"2800e3a2-c904-4180-abe9-d75d55fdff4b",

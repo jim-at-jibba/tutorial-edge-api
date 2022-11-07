@@ -31,6 +31,8 @@ type Comment struct {
 type Store interface {
 	GetComment(context.Context, string) (Comment, error)
 	PostComment(context.Context, Comment) (Comment, error)
+	DeleteComment(context.Context, string) error
+	UpdateComment(context.Context, string, Comment) (Comment, error)
 }
 
 // Service - is the struct that all our
@@ -61,12 +63,18 @@ func (s *Service) GetComment(ctx context.Context, id string) (Comment, error) {
 	return cmt, nil
 }
 
-func (s *Service) UpdateComment(ctx context.Context, cmt Comment) error {
-	return ErrNotImplemented
+func (s *Service) UpdateComment(ctx context.Context, id string, updatedCmt Comment) (Comment, error) {
+	cmt, err := s.Store.UpdateComment(ctx, id, updatedCmt)
+
+	if err != nil {
+		fmt.Println("error updating comment")
+		return Comment{}, err
+	}
+	return cmt, nil
 }
 
 func (s *Service) DeleteComment(ctx context.Context, id string) error {
-	return ErrNotImplemented
+	return s.Store.DeleteComment(ctx, id)
 }
 
 // context.Content - allows us to pass important information through our services
