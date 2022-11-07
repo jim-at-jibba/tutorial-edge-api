@@ -73,3 +73,17 @@ func (d *Datebase) PostComment(ctx context.Context, cmt comment.Comment) (commen
 
 	return cmt, nil
 }
+
+func (d *Datebase) DeleteComment(ctx context.Context, id string) error {
+	_, err := d.Client.ExecContext(
+		ctx,
+		`DELETE FROM comments WHERE id = $1`,
+		id,
+	)
+
+	if err != nil {
+		return fmt.Errorf("failed to delete comment from database: %w", err)
+	}
+
+	return nil
+}
